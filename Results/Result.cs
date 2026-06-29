@@ -72,12 +72,12 @@ public class Result
     public IEnumerable<Error> GetErrorsBy(Func<Error, bool> predicate) => 
         _errors.Where(predicate);
 
-    public virtual Result<T> ToResult<T>()
+    public virtual Result<T> AsResult<T>()
         => IsSuccessful ? 
             throw new ResultConversionException($"Cannot convert to result {typeof(T).Name} when the result is successful.") 
             : new Result<T>(_errors);
     
-    public Task<Result> ToTaskResult()
+    public Task<Result> AsTaskResult()
          => Task.FromResult(this);
     
     public void EnsureSuccess(string? failureMessage = null)
@@ -165,7 +165,10 @@ public class Result
         => new (errors);
 
     public static Result<T> From<T>(Result result)
-        => result.ToResult<T>();
+        => result.AsResult<T>();
+    
+    public static Result<IEnumerable<T>> Combine<T>(params Result<T>[] results)
+        => results.Aggregate();
     
     public static implicit operator Result(Error error)
         => Fail(error);
@@ -177,7 +180,7 @@ public class Result
         => new (errors);
 }
 
-public sealed class Result<T> : Result 
+public class Result<T> : Result 
 {
     public T Output
     {
@@ -230,17 +233,14 @@ public sealed class Result<T> : Result
     
     public T GetOrDefault(T defaultValue) 
         =>  HasOutput ?  Output : defaultValue;
-    
-    public string GetOutputTypeName() 
-        => typeof(T).Name;
 
     public IEnumerable<Error<T>> GetErrorsOfOutputType()
         => GetErrorsOfOutputType<T>();
     
-    public Result ToResult()
+    public Result AsResult()
         => this;
 
-    public override Result<TOther> ToResult<TOther>()
+    public override Result<TOther> AsResult<TOther>()
     {
         if (IsFailure)
         {
@@ -253,9 +253,9 @@ public sealed class Result<T> : Result
         throw new ResultConversionException($"Error converting {typeof(T).Name} to {typeof(TOther).Name}");
     }
     
-    public Task<Result<TOther>> ToTaskResult<TOther>()
+    public Task<Result<TOther>> AsTaskResult<TOther>()
     {
-        return Task.FromResult(ToResult<TOther>());
+        return Task.FromResult(AsResult<TOther>());
     }
 
     public static implicit operator T(Result<T> result) 

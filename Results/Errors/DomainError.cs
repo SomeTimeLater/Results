@@ -6,8 +6,8 @@ public record DomainError : Error
 {
     public string Message { get; }
     
-    private DomainError(DomainFailure domainViolation, string message) 
-        : base(domainViolation)
+    private DomainError(DomainFailure failure, string message) 
+        : base(failure)
     {
         Message = message;
     }

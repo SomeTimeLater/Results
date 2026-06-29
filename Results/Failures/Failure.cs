@@ -15,9 +15,7 @@ public record Failure
     public static InsufficientPermissions InsufficientPermissions => new ();
     public static InvariantViolation InvariantViolation => new ();
     public static NotFound NotFound => new ();
-
     public static ResourceConflict ResourceConflict => new ();
-
 
     public static Failure Create(int code, string message) => new (code, message);
 }

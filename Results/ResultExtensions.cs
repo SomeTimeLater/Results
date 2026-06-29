@@ -9,22 +9,22 @@ public static class ResultExtensions
         public async Task<Result<T>> ToResultAsync<T>()
         {
             var result = await resultTask;
-            return result.ToResult<T>();
+            return result.AsResult<T>();
         }
     }
     
     extension<T>(Task<Result<T>> resultTask)
     {
-        public async Task<Result> ToResultAsync()
+        public async Task<Result> AsResultAsync()
         {
             var result = await resultTask;
-            return result.ToResult();
+            return result.AsResult();
         }
         
-        public async Task<Result<TOther>> ToResultAsync<TOther>()
+        public async Task<Result<TOther>> AsResultAsync<TOther>()
         {
             var result = await resultTask;
-            return result.ToResult<TOther>();
+            return result.AsResult<TOther>();
         }
     }
     
@@ -66,6 +66,29 @@ public static class ResultExtensions
         {
             var errors = results.GetErrors();
             var result = Result.Fail(errors.ToList());
+            return result;
+        }
+    }
+    
+    extension<T>(Result<T>[] results)
+    {
+        public Result<IEnumerable<T>> Aggregate()
+        {
+            var isAllSuccessful = results.AllSuccessful();
+            return isAllSuccessful
+                ? Result.Success(results.GetOutputs())
+                : results.CreateFailureResult();
+        }
+
+        public IEnumerable<T> GetOutputs()
+        {
+            return results.Select(r => r.Output);
+        }
+
+        private Result<IEnumerable<T>> CreateFailureResult()
+        {
+            var errors = results.GetErrors();
+            var result = Result.Fail<IEnumerable<T>>(errors.ToList());
             return result;
         }
     }
