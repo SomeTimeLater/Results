@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using Results.Errors;
-using Results.Failures;
+using SomeTimeLater.Results.Errors;
+using SomeTimeLater.Results.Failures;
 
-namespace Results;
+namespace SomeTimeLater.Results;
 
 public class Result
 {

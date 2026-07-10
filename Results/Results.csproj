@@ -3,7 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Results</RootNamespace>
+    <RootNamespace>SomeTimeLater.Results</RootNamespace>
     <PackageId>SomeTimeLater.Results</PackageId>
     <PackageTags>Results Errors Failures</PackageTags>
     <Version>1.0.0</Version>

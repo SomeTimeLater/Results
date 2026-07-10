@@ -1,4 +1,4 @@
-﻿namespace Results.Failures;
+﻿namespace SomeTimeLater.Results.Failures;
 
 public record DomainFailure : Failure
 {

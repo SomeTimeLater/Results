@@ -1,6 +1,6 @@
-﻿using Results.Failures;
+﻿using SomeTimeLater.Results.Failures;
 
-namespace Results.Errors;
+namespace SomeTimeLater.Results.Errors;
 
 public static class ErrorExtensions
 {
