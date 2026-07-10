@@ -48,7 +48,13 @@ public class Result
 
     public void AddErrors(IEnumerable<Error> errors)
       => AddError(errors.ToArray());
-
+    
+    public void AddErrors(IEnumerable<DomainError> errors)
+        => AddError(errors.Cast<Error>().ToArray());
+    
+    public void AddErrors<T>(IEnumerable<DomainError<T>> errors)
+        => AddError(errors.Cast<Error>().ToArray());
+    
     public void AddError(params Error[] errors)
       => _errors.AddRange(errors);
 
@@ -92,35 +98,41 @@ public class Result
     public static Result Success()
       => new ();
     
-    public static Result DomainViolation(string message)
-        => new (DomainError.Violation(message));
+    public static Result DomainViolation(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.Violation(domainErrorCode, message, propertyName));
     
-    public static Result InsufficientPermissions(string message)
-        => new (DomainError.InsufficientPermissions(message));
+    public static Result InsufficientPermissions(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.InsufficientPermissions(domainErrorCode, message, propertyName));
     
     public static Result InvariantViolation(string? because = "")
         => new (UnexpectedError.InvariantViolation(because));
     
-    public static Result NotFound(string message)
-        => new (DomainError.NotFound(message));
+    public static Result NotFound(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.NotFound(domainErrorCode, message, propertyName));
     
-    public static Result ResourceConflict(string message)
-        => new (DomainError.ResourceConflict(message));
+    public static Result ResourceConflict(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.ResourceConflict(domainErrorCode, message, propertyName));
     
     public static Result Fail(Failure failure, string? because = null)
         => new (UnexpectedError.From(failure, because));
     
-    public static Result Fail(DomainFailure failure, string message)
-        => new (DomainError.From(failure, message));
+    public static Result Fail(DomainFailure failure, string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.From(failure, domainErrorCode, message, propertyName));
     
     public static Result Fail(Error error)
         => new (error);
     
-    public static Result Fail(Error[] errors)
+    public static Result Fail(params Error[] errors)
         => Fail(errors.ToList());
     
-    public static Result Fail(List<Error> errors)
-        => new (errors);
+    public static Result Fail(params DomainError[] errors)
+        => Fail(errors.Cast<Error>().ToList());
+    
+    public static Result Fail(IEnumerable<Error> errors)
+        => new (errors.ToList());
+    
+    public static Result Fail(IEnumerable<DomainError> errors)
+        => new (errors.Cast<Error>().ToList());
     
     public static Result From(Result result)
         => new (result._errors);
@@ -131,26 +143,25 @@ public class Result
     public static Result<T> Success<T>(T output)
         => new (output);
     
-    public static Result<T> DomainViolation<T>(string message)
-        => new (DomainError.Violation<T>(message));
+    public static Result<T> DomainViolation<T>(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.Violation<T>(domainErrorCode, message, propertyName));
     
-    public static Result<T> InsufficientPermissions<T>(string message)
-        => new (DomainError.InsufficientPermissions<T>(message));
-    
+    public static Result<T> InsufficientPermissions<T>(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.InsufficientPermissions<T>(domainErrorCode, message, propertyName));
     public static Result<T> InvariantViolation<T>(string? because = "")
         => new (UnexpectedError.InvariantViolation<T>(because));
     
-    public static Result<T> NotFound<T>(string message)
-        => new (DomainError.NotFound<T>(message));
+    public static Result<T> NotFound<T>(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.NotFound<T>(domainErrorCode, message, propertyName));
     
-    public static Result<T> ResourceConflict<T>(string message)
-        => new (DomainError.ResourceConflict<T>(message));
+    public static Result<T> ResourceConflict<T>(string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.ResourceConflict<T>(domainErrorCode, message, propertyName));
     
     public static Result<T> Fail<T>(Failure failure, string? because = null)
         => new (UnexpectedError.From<T>(failure, because));
     
-    public static Result<T> Fail<T>(DomainFailure failure, string message)
-        => new (DomainError.From<T>(failure, message));
+    public static Result<T> Fail<T>(DomainFailure failure, string domainErrorCode, string message, string? propertyName = null)
+        => new (DomainError.From<T>(failure, domainErrorCode, message, propertyName));
     
     public static Result<T> Fail<T>(Error error)
         => new (error);
@@ -158,11 +169,23 @@ public class Result
     public static Result<T> Fail<T>(Error<T> error)
         => new (error);
     
-    public static Result<T> Fail<T>(Error[] errors)
+    public static Result<T> Fail<T>(params Error[] errors)
         => Fail<T>(errors.ToList());
     
-    public static Result<T> Fail<T>(List<Error> errors)
-        => new (errors);
+    public static Result<T> Fail<T>(params DomainError[] errors)
+        => Fail<T>(errors.Cast<Error>().ToList());
+    
+    public static Result<T> Fail<T>(params DomainError<T>[] errors)
+        => Fail<T>(errors.Cast<Error>().ToList());
+    
+    public static Result<T> Fail<T>(IEnumerable<Error> errors)
+        => new (errors.ToList());
+    
+    public static Result<T> Fail<T>(IEnumerable<DomainError> errors)
+        => new (errors.Cast<Error>().ToList());
+    
+    public static Result<T> Fail<T>(IEnumerable<DomainError<T>> errors)
+        => new (errors.Cast<Error>().ToList());
 
     public static Result<T> From<T>(Result result)
         => result.AsResult<T>();

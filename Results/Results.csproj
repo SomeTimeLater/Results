@@ -6,7 +6,7 @@
     <RootNamespace>SomeTimeLater.Results</RootNamespace>
     <PackageId>SomeTimeLater.Results</PackageId>
     <PackageTags>Results Errors Failures</PackageTags>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Matt Doonan</Authors>
     <PackageDescription>This package introduces a lighweight result object</PackageDescription>
     <PackageProjectUrl>https://github.com/SomeTimeLater/Results</PackageProjectUrl>
